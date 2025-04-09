@@ -13,6 +13,8 @@ import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
 import PublicProfile from './components/PublicProfile';
 import UserList from './components/UserList';
+import ReportUser from './components/ReportUser';
+import Reports from './components/Reports';
 import { useUser } from './hooks/useUser';
 
 const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
@@ -54,6 +56,15 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
               </ProtectedRoute>
             }
           />
+        <Route path="/report/:userId" element={<ReportUser />} />
+        <Route
+          path="/reports"
+          element={
+            <ProtectedRoute allowedRoles={['Moderator', 'Admin']} role={role}>
+              <Reports />
+            </ProtectedRoute>
+          }
+        />
         </Routes>
       </div>
     );
