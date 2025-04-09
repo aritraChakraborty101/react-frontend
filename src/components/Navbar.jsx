@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import './Navbar.css'; // Import the CSS file for styling
+import './CssComponent/Navbar.css'; // Import the CSS file for styling
 
 function Navbar({ role, logoutFn }) {
   return (
@@ -27,6 +27,9 @@ function Navbar({ role, logoutFn }) {
         )}
         <li>
           <Link to="/request_role">Request Role</Link>
+        </li>
+        <li>
+          <Link to="/users">All Users</Link>
         </li>
         <li>
           <button onClick={() => logoutFn(true)}>Log Out</button>

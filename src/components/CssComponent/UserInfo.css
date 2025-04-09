@@ -1,0 +1,35 @@
+.profile-picture {
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 1rem;
+  }
+  
+  form {
+    margin-top: 1rem;
+  }
+  
+  form label {
+    display: block;
+    margin-bottom: 0.5rem;
+  }
+  
+  form input {
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    width: 100%;
+    max-width: 300px;
+  }
+  
+  form button {
+    padding: 0.5rem 1rem;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    cursor: pointer;
+  }
+  
+  form button:hover {
+    background-color: #0056b3;
+  }

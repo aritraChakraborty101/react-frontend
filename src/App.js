@@ -11,6 +11,8 @@ import RequestRole from './components/RequestRole';
 import ManageRoleRequests from './components/ManageRoleRequests';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
+import PublicProfile from './components/PublicProfile';
+import UserList from './components/UserList';
 import { useUser } from './hooks/useUser';
 
 const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
@@ -42,6 +44,8 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
             }
           />
           <Route path="/request_role" element={<RequestRole />} />
+          <Route path="/profile/:userId" element={<PublicProfile />} />
+          <Route path="/users" element={<UserList />} />
           <Route
             path="/manage_role_requests"
             element={
