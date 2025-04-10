@@ -44,18 +44,39 @@ function Reports() {
   };
 
   return (
-    <div>
-      <h2>User Reports</h2>
+    <div className="container mx-auto px-4 py-6">
+      <h2 className="text-2xl font-bold text-center mb-6">User Reports</h2>
       {reports.map((report) => (
-        <div key={report.id}>
-          <p><strong>Reported User:</strong> {report.reported_user}</p>
-          <p><strong>Reporter:</strong> {report.reporter_user}</p>
-          <p><strong>Issue:</strong> {report.issue}</p>
-          <button onClick={() => handleAction(report.id, 'ban')}>Ban User</button>
-          <button onClick={() => handleAction(report.id, 'reject')}>Reject Report</button>
+        <div
+          key={report.id}
+          className="bg-white shadow-md rounded-lg p-4 mb-4 hover:bg-gray-100 transition"
+        >
+          <p className="text-gray-700 mb-2">
+            <strong className="font-semibold">Reported User:</strong> {report.reported_user}
+          </p>
+          <p className="text-gray-700 mb-2">
+            <strong className="font-semibold">Reporter:</strong> {report.reporter_user}
+          </p>
+          <p className="text-gray-700 mb-4">
+            <strong className="font-semibold">Issue:</strong> {report.issue}
+          </p>
+          <div className="flex space-x-4">
+            <button
+              onClick={() => handleAction(report.id, 'ban')}
+              className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow-md transition"
+            >
+              Ban User
+            </button>
+            <button
+              onClick={() => handleAction(report.id, 'reject')}
+              className="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded shadow-md transition"
+            >
+              Reject Report
+            </button>
+          </div>
         </div>
       ))}
-      {message && <p>{message}</p>}
+      {message && <p className="text-green-500 text-center mt-4">{message}</p>}
     </div>
   );
 }

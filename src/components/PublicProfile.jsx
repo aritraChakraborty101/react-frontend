@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
-import { useNavigate } from 'react-router-dom';
+import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 
 function PublicProfile() {
@@ -29,20 +28,33 @@ function PublicProfile() {
   }, [userId]);
 
   if (error) {
-    return <p>{error}</p>;
+    return <p className="text-red-500 text-center mt-4">{error}</p>;
   }
 
   if (!profile) {
-    return <p>Loading...</p>;
+    return <p className="text-gray-500 text-center mt-4">Loading...</p>;
   }
 
   return (
-    <div>
-      <h2>Public Profile</h2>
-      <p><strong>Name:</strong> {profile.name}</p>
-      <p><strong>Email:</strong> {profile.email}</p>
-      <p><strong>Contributions:</strong> {profile.contributions}</p>
-      <button onClick={handleReportUser}>Report User</button>
+    <div className="container mx-auto px-4 py-6">
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-2xl font-bold text-center mb-4">Public Profile</h2>
+        <p className="text-gray-700 mb-2">
+          <strong className="font-semibold">Name:</strong> {profile.name}
+        </p>
+        <p className="text-gray-700 mb-2">
+          <strong className="font-semibold">Email:</strong> {profile.email}
+        </p>
+        <p className="text-gray-700 mb-4">
+          <strong className="font-semibold">Contributions:</strong> {profile.contributions}
+        </p>
+        <button
+          onClick={handleReportUser}
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow-md transition"
+        >
+          Report User
+        </button>
+      </div>
     </div>
   );
 }

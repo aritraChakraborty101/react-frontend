@@ -15,6 +15,7 @@ import PublicProfile from './components/PublicProfile';
 import UserList from './components/UserList';
 import ReportUser from './components/ReportUser';
 import Reports from './components/Reports';
+import AuthPrompt from './components/AuthPrompt'; // Import the new component
 import { useUser } from './hooks/useUser';
 
 const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
@@ -56,26 +57,25 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
               </ProtectedRoute>
             }
           />
-        <Route path="/report/:userId" element={<ReportUser />} />
-        <Route
-          path="/reports"
-          element={
-            <ProtectedRoute allowedRoles={['Moderator', 'Admin']} role={role}>
-              <Reports />
-            </ProtectedRoute>
-          }
-        />
+          <Route path="/report/:userId" element={<ReportUser />} />
+          <Route
+            path="/reports"
+            element={
+              <ProtectedRoute allowedRoles={['Moderator', 'Admin']} role={role}>
+                <Reports />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
     );
   }
 
   return (
-    <div>
-      <p>To get started, please log in or sign up.</p>
-      <button onClick={redirectToSignupPage}>Sign up</button>
-      <button onClick={redirectToLoginPage}>Log in</button>
-    </div>
+    <AuthPrompt
+      redirectToSignupPage={redirectToSignupPage}
+      redirectToLoginPage={redirectToLoginPage}
+    />
   );
 });
 

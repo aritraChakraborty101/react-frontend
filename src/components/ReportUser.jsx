@@ -41,20 +41,32 @@ function ReportUser() {
   };
 
   return (
-    <div>
-      <h2>Report User</h2>
-      <form onSubmit={handleSubmit}>
-        <label>
-          Describe the issue:
-          <textarea
-            value={issue}
-            onChange={(e) => setIssue(e.target.value)}
-            required
-          />
-        </label>
-        <button type="submit">Submit Report</button>
-      </form>
-      {message && <p>{message}</p>}
+    <div className="container mx-auto px-4 py-6">
+      <div className="bg-white shadow-md rounded-lg p-6">
+        <h2 className="text-2xl font-bold text-center mb-4">Report User</h2>
+        <form onSubmit={handleSubmit}>
+          <label className="block text-gray-700 font-semibold mb-2">
+            Describe the issue:
+            <textarea
+              value={issue}
+              onChange={(e) => setIssue(e.target.value)}
+              required
+              className="w-full border border-gray-300 rounded-lg p-2 mt-1 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </label>
+          <button
+            type="submit"
+            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow-md transition"
+          >
+            Submit Report
+          </button>
+        </form>
+        {message && (
+          <p className={`mt-4 text-center ${message.includes('successfully') ? 'text-green-500' : 'text-red-500'}`}>
+            {message}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
