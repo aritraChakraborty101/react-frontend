@@ -32,21 +32,21 @@ function PublicProfile() {
   }
 
   if (!profile) {
-    return <p className="text-gray-500 text-center mt-4">Loading...</p>;
+    return <p className="text-gray-400 text-center mt-4">Loading...</p>;
   }
 
   return (
     <div className="container mx-auto px-4 py-6">
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-center mb-4">Public Profile</h2>
-        <p className="text-gray-700 mb-2">
-          <strong className="font-semibold">Name:</strong> {profile.name}
+      <div className="bg-gray-800 shadow-md rounded-lg p-6">
+        <h2 className="text-2xl font-bold text-center mb-4 text-gray-200">Public Profile</h2>
+        <p className="text-gray-300 mb-2">
+          <strong className="font-semibold text-gray-200">Name:</strong> {profile.name}
         </p>
-        <p className="text-gray-700 mb-2">
-          <strong className="font-semibold">Email:</strong> {profile.email}
+        <p className="text-gray-300 mb-2">
+          <strong className="font-semibold text-gray-200">Email:</strong> {profile.email}
         </p>
-        <p className="text-gray-700 mb-4">
-          <strong className="font-semibold">Contributions:</strong> {profile.contributions}
+        <p className="text-gray-300 mb-4">
+          <strong className="font-semibold text-gray-200">Contributions:</strong> {profile.contributions}
         </p>
         <button
           onClick={handleReportUser}

@@ -45,14 +45,37 @@ function ManageRoleRequests() {
   };
 
   return (
-    <div>
-      <h2>Manage Role Requests</h2>
-      <ul>
+    <div className="container mx-auto px-4 py-6 bg-gray-900 text-gray-200">
+      <h2 className="text-2xl font-bold text-center mb-6">Manage Role Requests</h2>
+      <ul className="space-y-4">
         {roleRequests.map((req) => (
-          <li key={req.id}>
-            User ID: {req.user_id}, Requested Role: {req.requested_role}, Status: {req.status}
-            <button onClick={() => handleUpdate(req.id, 'approved')}>Approve</button>
-            <button onClick={() => handleUpdate(req.id, 'rejected')}>Reject</button>
+          <li
+            key={req.id}
+            className="bg-gray-800 shadow-md rounded-lg p-4 hover:bg-gray-700 transition"
+          >
+            <p className="text-gray-300">
+              <strong className="text-gray-200">User ID:</strong> {req.user_id}
+            </p>
+            <p className="text-gray-300">
+              <strong className="text-gray-200">Requested Role:</strong> {req.requested_role}
+            </p>
+            <p className="text-gray-300">
+              <strong className="text-gray-200">Status:</strong> {req.status}
+            </p>
+            <div className="flex space-x-4 mt-4">
+              <button
+                onClick={() => handleUpdate(req.id, 'approved')}
+                className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded transition"
+              >
+                Approve
+              </button>
+              <button
+                onClick={() => handleUpdate(req.id, 'rejected')}
+                className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded transition"
+              >
+                Reject
+              </button>
+            </div>
           </li>
         ))}
       </ul>

@@ -27,18 +27,18 @@ function RequestRole() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <div className="bg-white shadow-md rounded-lg p-6">
-        <h2 className="text-2xl font-bold text-center mb-4">Request Role Upgrade</h2>
+    <div className="container mx-auto px-4 py-6 bg-gray-900 text-gray-200">
+      <div className="bg-gray-800 shadow-md rounded-lg p-6">
+        <h2 className="text-2xl font-bold text-center mb-4 text-gray-200">Request Role Upgrade</h2>
         <div className="mb-4">
-          <label htmlFor="role" className="block text-gray-700 font-semibold mb-2">
+          <label htmlFor="role" className="block text-gray-300 font-semibold mb-2">
             Select Role:
           </label>
           <select
             id="role"
             value={requestedRole}
             onChange={(e) => setRequestedRole(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full bg-gray-900 text-gray-200 border border-gray-700 rounded-lg p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">Select Role</option>
             <option value="Moderator">Moderator</option>
