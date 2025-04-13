@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import { useAuthInfo } from '@propelauth/react';
 import { fetchPosts, handleVote, handlePostSubmit, handleEditPost } from './discussionUtils';
 import EditPostForm from './EditPostForm';
@@ -83,7 +83,6 @@ function DiscussionThreads() {
   return (
     <div className="container mx-auto px-4 py-6 bg-gray-900 text-gray-200">
       <h2 className="text-2xl font-bold text-center mb-6">Discussion Threads</h2>
-
       {/* Submit Post Form */}
       <div className="max-w-2xl mx-auto">
         <SubmitPostForm onSubmit={handlePostSubmitClick} />
@@ -96,7 +95,13 @@ function DiscussionThreads() {
           .map((post) => (
             <li key={post.id} className="bg-gray-800 shadow-md rounded-lg p-4 hover:bg-gray-700 transition">
               <p className="text-gray-400 text-sm">
-                <span className="font-semibold text-gray-200">{post.author}</span> • {new Date(post.created_at).toLocaleString()}
+                <Link
+                  to={`/profile/${post.user_id}`}
+                  className="font-semibold text-gray-200 hover:text-blue-400 transition"
+                >
+                  {post.author}
+                </Link>
+                {' '}• {new Date(post.created_at).toLocaleString()}
               </p>
               <h3 className="text-lg font-bold mt-2 text-gray-200">{post.title}</h3>
               <p className="text-gray-300 mt-2">{post.content}</p>
@@ -132,9 +137,8 @@ function DiscussionThreads() {
                 {post.user_id === user?.userId && (
                   <button
                     onClick={() => handleEditClick(post)}
-                    className="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded"
+                    className="nf nf-fa-edit text-3xl pb-5"
                   >
-                    Edit
                   </button>
                 )}
               </div>
