@@ -51,4 +51,23 @@ export const getOrgInfo = async (token, orgId) => {
   return response.data;
 };
 
+
+// Fetch notes for a course
+export const fetchNotes = async (courseId) => {
+  const response = await api.get(`/notes/${courseId}`);
+  return response.data;
+};
+
+// Upload a new note
+export const uploadNote = async (noteData) => {
+  const response = await api.post('/notes/upload', noteData);
+  return response.data;
+};
+
+// Vote on a note (helpful/unhelpful)
+export const voteOnNote = async (noteId, vote) => {
+  const response = await api.patch(`/notes/vote/${noteId}`, { vote });
+  return response.data;
+};
+
 export default api;
