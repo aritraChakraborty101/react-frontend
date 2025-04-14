@@ -89,3 +89,104 @@ export const handleEditPost = async (postId, updatedPost, userId, accessToken) =
     throw err.response?.data?.error || 'Failed to edit post.';
   }
 };
+
+// /**
+//  * Delete a post.
+//  */
+
+
+export const deletePost = async (postId, userId, accessToken) => {
+  try {
+    const response = await axios.delete(
+      `http://localhost:3001/courses/posts/${postId}`,
+      {
+        data: {
+          user_id: userId, 
+        },
+        headers: {
+          Authorization: `Bearer ${accessToken}`, 
+        },
+      }
+    );
+    return response.data.message; 
+  } catch (err) {
+    console.error('Error deleting post:', err);
+    throw err.response?.data?.error || 'Failed to delete post.'; 
+  }
+};
+
+export const fetchComments = async (postId, accessToken) => {
+  try {
+    const response = await axios.get(`http://localhost:3001/courses/posts/${postId}/comments`, {
+      headers: {
+        Authorization: `Bearer ${accessToken}`,
+      },
+    });
+    return response.data;
+  } catch (err) {
+    console.error("Error fetching comments:", err);
+    throw err.response?.data?.error || "Failed to fetch comments.";
+  }
+};
+
+export const createComment = async (postId, userId, content, accessToken) => {
+  try {
+    const response = await axios.post(
+      `http://localhost:3001/courses/posts/${postId}/comments`,
+      { user_id: userId, content },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data.message;
+  } catch (err) {
+    console.error("Error creating comment:", err);
+    throw err.response?.data?.error || "Failed to create comment.";
+  }
+};
+
+/**
+ * Edit an existing comment.
+ */
+
+export const editComment = async (commentId, userId, content, accessToken) => {
+  try {
+    const response = await axios.put(
+      `http://localhost:3001/courses/comments/${commentId}`,
+      { user_id: userId, content },
+      {
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data.message;
+  } catch (err) {
+    console.error("Error editing comment:", err);
+    throw err.response?.data?.error || "Failed to edit comment.";
+  }
+};
+
+// /**
+//  * Delete a comment.
+//  */
+
+export const deleteComment = async (commentId, userId, accessToken) => {
+  try {
+    const response = await axios.delete(
+      `http://localhost:3001/courses/comments/${commentId}`,
+      {
+        data: { user_id: userId },
+        headers: {
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
+    return response.data.message;
+  } catch (err) {
+    console.error("Error deleting comment:", err);
+    throw err.response?.data?.error || "Failed to delete comment.";
+  }
+};
