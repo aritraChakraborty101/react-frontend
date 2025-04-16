@@ -29,10 +29,14 @@ function CourseList() {
 
   const handleOptionClick = (courseId, option) => {
     if (option === 'notes') {
-      alert('Notes feature is not implemented yet.');
+      navigate(`/courses/${courseId}/notes`); // Navigate to the notes page for the course
     } else if (option === 'threads') {
       navigate(`/courses/${courseId}/threads`);
     }
+  };
+
+  const handleUploadClick = (courseId) => {
+    navigate(`/courses/${courseId}/upload-note`);
   };
 
   if (error) {
@@ -62,6 +66,12 @@ function CourseList() {
                 className="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded"
               >
                 Discussion Threads
+              </button>
+              <button
+                onClick={() => handleUploadClick(course.id)}
+                className="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded"
+              >
+                Upload Notes
               </button>
             </div>
           </li>

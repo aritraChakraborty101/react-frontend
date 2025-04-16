@@ -19,6 +19,9 @@ import CourseList from './components/Discussion/CourseList';
 import DiscussionThreads from './components/Discussion/DiscussionThreads';
 import AddCourse from './components/Course/AddCourse';
 import Sidebar from './components/Sidebar';
+import UploadNote from './components/Discussion/UploadNote';
+import CourseNotes from './components/Discussion/CourseNotes';
+import NoteViewer from './components/Discussion/NoteViewer';
 import { useUser } from './hooks/useUser';
 
 const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
@@ -79,6 +82,9 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
                 }
               />
               <Route path="/courses" element={<CourseList />} />
+              <Route path="/courses/:courseId/upload-note" element={<UploadNote />} />
+              <Route path="/courses/:courseId/notes" element={<CourseNotes />} />
+              <Route path="/courses/:courseId/notes/:noteId" element={<NoteViewer />} />
               <Route path="/courses/:courseId/threads" element={<DiscussionThreads />} />
               <Route
                 path="/add_course"
