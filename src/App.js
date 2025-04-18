@@ -22,6 +22,7 @@ import Sidebar from './components/Sidebar';
 import UploadNote from './components/Discussion/UploadNote';
 import CourseNotes from './components/Discussion/CourseNotes';
 import NoteViewer from './components/Discussion/NoteViewer';
+import PendingNotes from './components/Course/PendingNotes';
 import { useUser } from './hooks/useUser';
 
 const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
@@ -94,7 +95,16 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
                   </ProtectedRoute>
                 }
               />
+              <Route
+                path="/admin/pending_notes"
+                element={
+                  <ProtectedRoute allowedRoles={['Admin']} role={role}>
+                    <PendingNotes />
+                  </ProtectedRoute>
+                }
+              />
             </Routes>
+            
           </div>
         </div>
       </div>

@@ -28,6 +28,11 @@ function Navbar({ role, logoutFn }) {
                   Reports
                 </Link>
               </li>
+              <li>
+                <Link to="/admin/pending_notes" className="hover:text-gray-300">
+                  Review Notes
+                </Link>
+              </li>
             </>
           )}
           <li>
