@@ -1,6 +1,12 @@
-import React from 'react';
-import { useLogoutFunction, useRedirectFunctions, withAuthInfo } from '@propelauth/react';
+import React, { useEffect } from 'react';
+import {
+ useLogoutFunction,
+ useRedirectFunctions,
+ withAuthInfo
+} from '@propelauth/react';
 import { Routes, Route } from 'react-router-dom';
+
+
 import Home from './components/Home';
 import UserInfo from './components/UserInfo';
 import ListOfOrgs from './components/ListOfOrgs';
@@ -10,113 +16,141 @@ import RequestRole from './components/RequestRole';
 import ManageRoleRequests from './components/ManageRoleRequests';
 import ProtectedRoute from './components/ProtectedRoute';
 import Navbar from './components/Navbar';
+import Sidebar from './components/Sidebar';
+
+
 import PublicProfile from './components/PublicProfile';
 import UserList from './components/UserList';
 import ReportUser from './components/ReportUser';
 import Reports from './components/Reports';
-import AuthPrompt from './components/AuthPrompt'; 
+
+
 import CourseList from './components/Discussion/CourseList';
 import DiscussionThreads from './components/Discussion/DiscussionThreads';
-import AddCourse from './components/Course/AddCourse';
-import Sidebar from './components/Sidebar';
 import UploadNote from './components/Discussion/UploadNote';
 import CourseNotes from './components/Discussion/CourseNotes';
 import NoteViewer from './components/Discussion/NoteViewer';
+import AddCourse from './components/Course/AddCourse';
 import PendingNotes from './components/Course/PendingNotes';
+
+
+import ConversationList from './components/ConversationList';
+import Conversation from './components/Conversation';
+
+
+import AuthPrompt from './components/AuthPrompt';
 import { useUser } from './hooks/useUser';
 
+
+// Socket Context
+import { SocketContext, socket } from './Context/socket';
+
+
 const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
-  const logoutFn = useLogoutFunction();
-  const { redirectToSignupPage, redirectToLoginPage } = useRedirectFunctions();
+ const logoutFn = useLogoutFunction();
+ const { redirectToSignupPage, redirectToLoginPage } = useRedirectFunctions();
+ const { userInfo, role, loading } = useUser(accessToken);
 
-  // Use the custom hook to manage user state
-  const { userInfo, role, loading } = useUser(accessToken);
 
-  if (loading) {
-    return <div className="text-gray-200 bg-gray-900 h-screen flex items-center justify-center">Loading...</div>;
-  }
+ useEffect(() => {
+   if (isLoggedIn) {
+     socket.connect();
+     return () => socket.disconnect();
+   }
+ }, [isLoggedIn]);
 
-  if (isLoggedIn) {
-    return (
-      <div className="flex bg-gray-900 text-gray-200 min-h-screen">
-        {/* Sidebar */}
-        <Sidebar />
 
-        {/* Main Content Area */}
-        <div className="flex-1 ml-64">
-          {/* Top Navbar */}
-          <Navbar role={role} logoutFn={logoutFn} />
+ if (loading) {
+   return (
+     <div className="text-gray-200 bg-gray-900 h-screen flex items-center justify-center">
+       Loading...
+     </div>
+   );
+ }
 
-          {/* Routes */}
-          <div className="p-4">
-            <Routes>
-              <Route path="/" element={<Home />} />
-              <Route path="/user_info" element={<UserInfo />} />
-              <Route path="/orgs" element={<ListOfOrgs />} />
-              <Route path="/org/:orgName" element={<OrgInfo />} />
-              <Route
-                path="/manage_users"
-                element={
-                  <ProtectedRoute allowedRoles={['Moderator', 'Admin']} role={role}>
-                    <ManageUsers />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/request_role" element={<RequestRole />} />
-              <Route path="/profile/:userId" element={<PublicProfile />} />
-              <Route path="/users" element={<UserList />} />
-              <Route
-                path="/manage_role_requests"
-                element={
-                  <ProtectedRoute allowedRoles={['Moderator', 'Admin']} role={role}>
-                    <ManageRoleRequests />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/report/:userId" element={<ReportUser />} />
-              <Route
-                path="/reports"
-                element={
-                  <ProtectedRoute allowedRoles={['Moderator', 'Admin']} role={role}>
-                    <Reports />
-                  </ProtectedRoute>
-                }
-              />
-              <Route path="/courses" element={<CourseList />} />
-              <Route path="/courses/:courseId/upload-note" element={<UploadNote />} />
-              <Route path="/courses/:courseId/notes" element={<CourseNotes />} />
-              <Route path="/courses/:courseId/notes/:noteId" element={<NoteViewer />} />
-              <Route path="/courses/:courseId/threads" element={<DiscussionThreads />} />
-              <Route
-                path="/add_course"
-                element={
-                  <ProtectedRoute allowedRoles={['Admin']} role={role}>
-                    <AddCourse />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/admin/pending_notes"
-                element={
-                  <ProtectedRoute allowedRoles={['Admin']} role={role}>
-                    <PendingNotes />
-                  </ProtectedRoute>
-                }
-              />
-            </Routes>
-            
-          </div>
-        </div>
-      </div>
-    );
-  }
 
-  return (
-    <AuthPrompt
-      redirectToSignupPage={redirectToSignupPage}
-      redirectToLoginPage={redirectToLoginPage}
-    />
-  );
+ if (isLoggedIn) {
+   return (
+     <SocketContext.Provider value={socket}>
+       <div className="flex bg-gray-900 text-gray-200 min-h-screen">
+         <Sidebar />
+         <div className="flex-1 ml-64">
+           <Navbar role={role} logoutFn={logoutFn} />
+           <div className="p-4">
+             <Routes>
+               <Route path="/" element={<Home />} />
+               <Route path="/user_info" element={<UserInfo />} />
+               <Route path="/orgs" element={<ListOfOrgs />} />
+               <Route path="/org/:orgName" element={<OrgInfo />} />
+               <Route
+                 path="/manage_users"
+                 element={
+                   <ProtectedRoute allowedRoles={['Moderator', 'Admin']} role={role}>
+                     <ManageUsers />
+                   </ProtectedRoute>
+                 }
+               />
+               <Route path="/request_role" element={<RequestRole />} />
+               <Route
+                 path="/manage_role_requests"
+                 element={
+                   <ProtectedRoute allowedRoles={['Moderator', 'Admin']} role={role}>
+                     <ManageRoleRequests />
+                   </ProtectedRoute>
+                 }
+               />
+               <Route path="/profile/:userId" element={<PublicProfile userId={userInfo.userId} />} />
+               <Route path="/users" element={<UserList />} />
+               <Route path="/report/:userId" element={<ReportUser />} />
+               <Route
+                 path="/reports"
+                 element={
+                   <ProtectedRoute allowedRoles={['Moderator', 'Admin']} role={role}>
+                     <Reports />
+                   </ProtectedRoute>
+                 }
+               />
+               <Route path="/courses" element={<CourseList />} />
+               <Route path="/courses/:courseId/upload-note" element={<UploadNote />} />
+               <Route path="/courses/:courseId/notes" element={<CourseNotes />} />
+               <Route path="/courses/:courseId/notes/:noteId" element={<NoteViewer />} />
+               <Route path="/courses/:courseId/threads" element={<DiscussionThreads />} />
+               <Route
+                 path="/add_course"
+                 element={
+                   <ProtectedRoute allowedRoles={['Admin']} role={role}>
+                     <AddCourse />
+                   </ProtectedRoute>
+                 }
+               />
+               <Route
+                 path="/admin/pending_notes"
+                 element={
+                   <ProtectedRoute allowedRoles={['Admin']} role={role}>
+                     <PendingNotes />
+                   </ProtectedRoute>
+                 }
+               />
+               <Route path="/messages" element={<ConversationList />} />
+               <Route path="/messages/:convoId" element={<Conversation />} />
+             </Routes>
+           </div>
+         </div>
+       </div>
+     </SocketContext.Provider>
+   );
+ }
+
+
+ return (
+   <AuthPrompt
+     redirectToSignupPage={redirectToSignupPage}
+     redirectToLoginPage={redirectToLoginPage}
+   />
+ );
 });
 
+
 export default App;
+
+
