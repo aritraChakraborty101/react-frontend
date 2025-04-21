@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { useAuthInfo } from '@propelauth/react';
 
 function PublicProfile() {
   const { userId } = useParams(); // Get the user ID from the URL
   const [profile, setProfile] = useState(null);
   const [error, setError] = useState('');
-
+  const { user } = useAuthInfo(); // Get the current logged-in user's info
   const navigate = useNavigate();
 
   const handleReportUser = () => {
@@ -53,6 +54,12 @@ function PublicProfile() {
           className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow-md transition"
         >
           Report User
+        </button>
+        <button
+          onClick={() => navigate(`/messages/${user.userId}/${userId}`)} // Pass both senderId and receiverId
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow-md transition"
+        >
+          Message
         </button>
       </div>
     </div>

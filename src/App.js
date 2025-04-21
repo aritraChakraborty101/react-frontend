@@ -24,6 +24,8 @@ import CourseNotes from './components/Discussion/CourseNotes';
 import NoteViewer from './components/Discussion/NoteViewer';
 import PendingNotes from './components/Course/PendingNotes';
 import { useUser } from './hooks/useUser';
+import Messages from './components/message/Messages';
+import Conversations from './components/message/Conversations';
 
 const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
   const logoutFn = useLogoutFunction();
@@ -103,6 +105,8 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
                   </ProtectedRoute>
                 }
               />
+              <Route path="/messages/:senderId/:receiverId" element={<Messages />} /> 
+              <Route path="/conversations" element={<Conversations />} />
             </Routes>
             
           </div>
