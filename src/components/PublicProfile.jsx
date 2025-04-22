@@ -9,11 +9,51 @@ function PublicProfile() {
   const [error, setError] = useState('');
   const { user } = useAuthInfo(); // Get the current logged-in user's info
   const navigate = useNavigate();
+  const [connectionStatus, setConnectionStatus] = useState('pending');
+  const { accessToken } = useAuthInfo();
 
   const handleReportUser = () => {
     navigate(`/report/${userId}`);
   };
 
+  const handleConnectionRequest = async () => {
+    try {
+      const response = await axios.post(
+        'http://localhost:3001/connections/request',
+        { receiver_id: userId },
+        { headers: { Authorization: `Bearer ${accessToken}` } }
+      );
+      console.log(response.data);
+      setConnectionStatus('sent'); // Disable further requests once sent
+    } catch (err) {
+      console.error('Error sending connection request:', err);
+      setError('Could not send connection request.');
+    }
+  };
+
+  // Optionally, check if a connection request has already been sent.
+  useEffect(() => {
+    const fetchSentRequests = async () => {
+      try {
+        const res = await axios.get('http://localhost:3001/connections/sent', {
+          headers: { Authorization: `Bearer ${accessToken}` },
+        });
+        // Check if any request has already been sent to this user in a pending state.
+        const existing = res.data.find(
+          (req) => req.receiver_id === userId && req.status === 'pending'
+        );
+        if (existing) {
+          setConnectionStatus('sent');
+        }
+      } catch (err) {
+        console.error('Error fetching sent requests:', err);
+      }
+    };
+    if (accessToken && user && userId) {
+      fetchSentRequests();
+    }
+  }, [accessToken, user, userId]);
+  
   useEffect(() => {
     const fetchProfile = async () => {
       try {
@@ -61,6 +101,16 @@ function PublicProfile() {
         >
           Message
         </button>
+        <button
+            onClick={handleConnectionRequest}
+            disabled={connectionStatus === 'sent'}
+            className={`${
+              connectionStatus === 'sent' ? 'bg-gray-500' : 'bg-green-500 hover:bg-green-600'
+            } text-white px-4 py-2 rounded shadow-md transition`}
+            aria-label="Send Connection Request"
+          >
+            {connectionStatus === 'sent' ? 'Request Sent' : 'Connect'}
+          </button>
       </div>
     </div>
   );
