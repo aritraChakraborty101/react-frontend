@@ -2,6 +2,7 @@
   "name": "react-frontend",
   "version": "0.1.0",
   "private": true,
+  "proxy": "http://localhost:3001",
   "dependencies": {
     "@propelauth/react": "^2.0.29",
     "@testing-library/dom": "^10.4.0",

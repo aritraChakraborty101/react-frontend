@@ -28,6 +28,7 @@ import Messages from './components/message/Messages';
 import Conversations from './components/message/Conversations';
 import ConnectionRequests from './components/ConnectionRequests';
 import ConnectionsList from './components/ConnectionsList';
+import SearchBar from './components/SearchBar';
 
 const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
   const logoutFn = useLogoutFunction();
@@ -117,7 +118,10 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
               {/* Connection Feature Routes */}
               <Route path="/connection_requests" element={<ConnectionRequests />} />
               <Route path="/connections" element={<ConnectionsList />} />
+              <Route path="/search" element={<SearchBar />} />
             </Routes>
+          
+
           </div>
         </div>
       </div>
