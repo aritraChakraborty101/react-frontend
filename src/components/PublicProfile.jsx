@@ -81,7 +81,10 @@ function PublicProfile() {
       <div className="bg-gray-800 shadow-md rounded-lg p-6">
         <h2 className="text-2xl font-bold text-center mb-4 text-gray-200">Public Profile</h2>
         <p className="text-gray-300 mb-2">
-          <strong className="font-semibold text-gray-200">Name:</strong> {profile.name}
+          <strong className="font-semibold text-gray-200">Name:</strong> {profile.name}Upgrade to Premium
+          Unlock unlimited access to premium course notes, exclusive content, and an ad-free browsing experience.
+          
+          Buy Premium
         </p>
         <p className="text-gray-300 mb-2">
           <strong className="font-semibold text-gray-200">Email:</strong> {profile.email}
@@ -91,13 +94,13 @@ function PublicProfile() {
         </p>
         <button
           onClick={handleReportUser}
-          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow-md transition"
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded shadow-md transition mr-5"
         >
           Report User
         </button>
         <button
           onClick={() => navigate(`/messages/${user.userId}/${userId}`)} // Pass both senderId and receiverId
-          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow-md transition"
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow-md transition mr-5"
         >
           Message
         </button>
