@@ -14,7 +14,7 @@ import PublicProfile from './components/PublicProfile';
 import UserList from './components/UserList';
 import ReportUser from './components/ReportUser';
 import Reports from './components/Reports';
-import AuthPrompt from './components/AuthPrompt'; 
+import AuthPrompt from './components/AuthPrompt';
 import CourseList from './components/Discussion/CourseList';
 import DiscussionThreads from './components/Discussion/DiscussionThreads';
 import AddCourse from './components/Course/AddCourse';
@@ -26,16 +26,26 @@ import PendingNotes from './components/Course/PendingNotes';
 import { useUser } from './hooks/useUser';
 import Messages from './components/message/Messages';
 import Conversations from './components/message/Conversations';
+import ConnectionRequests from './components/ConnectionRequests';
+import ConnectionsList from './components/ConnectionsList';
+import SearchBar from './components/SearchBar';
+import PremiumAccessPage from './components/PremiumAccessPage'; // Import the premium page component
+import SuccessPage from './components/SuccessPage'; // optional
+import CancelPage from './components/CancelPage';   // optional
 
 const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
   const logoutFn = useLogoutFunction();
   const { redirectToSignupPage, redirectToLoginPage } = useRedirectFunctions();
 
-  // Use the custom hook to manage user state
+  // Use a custom hook to load user state and role
   const { userInfo, role, loading } = useUser(accessToken);
 
   if (loading) {
-    return <div className="text-gray-200 bg-gray-900 h-screen flex items-center justify-center">Loading...</div>;
+    return (
+      <div className="text-gray-200 bg-gray-900 h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    );
   }
 
   if (isLoggedIn) {
@@ -49,7 +59,7 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
           {/* Top Navbar */}
           <Navbar role={role} logoutFn={logoutFn} />
 
-          {/* Routes */}
+          {/* Routing Content */}
           <div className="p-4">
             <Routes>
               <Route path="/" element={<Home />} />
@@ -105,10 +115,18 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
                   </ProtectedRoute>
                 }
               />
-              <Route path="/messages/:senderId/:receiverId" element={<Messages />} /> 
+              <Route path="/messages/:senderId/:receiverId" element={<Messages />} />
               <Route path="/conversations" element={<Conversations />} />
+
+              {/* Connection Feature Routes */}
+              <Route path="/connection_requests" element={<ConnectionRequests />} />
+              <Route path="/connections" element={<ConnectionsList />} />
+              <Route path="/search" element={<SearchBar />} />
+              {/*payment feature routes*/ }
+              <Route path="/premium" element={<PremiumAccessPage />} />
+              <Route path="/success" element={<SuccessPage />} />
+              <Route path="/cancel" element={<CancelPage />} />
             </Routes>
-            
           </div>
         </div>
       </div>
