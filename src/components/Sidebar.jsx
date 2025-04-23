@@ -43,6 +43,11 @@ function Sidebar() {
             Courses
           </Link>
         </li>
+        <li>
+          <Link to="/conversations" className="block hover:bg-gray-700 px-4 py-2 rounded">
+            Chat List
+          </Link>
+        </li>
       </ul>
     </div>
   );

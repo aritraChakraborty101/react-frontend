@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { useAuthInfo } from '@propelauth/react';
@@ -11,10 +11,12 @@ function Messages() {
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState('');
   const { accessToken } = useAuthInfo(); // Get the current user's token
+  const chatContainerRef = useRef(null);
 
-  console.log('sender_id:', senderId);
-  console.log('receiver_id:', receiverId);
+  console.log('messages:', messages[0]);
 
+
+  // Fetch past messages
   useEffect(() => {
     const fetchMessages = async () => {
       try {
@@ -34,11 +36,11 @@ function Messages() {
       }
     };
 
-    fetchMessages(); // Fetch past messages when the component loads
+    fetchMessages();
 
     // Standardize the room name by sorting senderId and receiverId alphabetically
     const room = `conversation_${[senderId, receiverId].sort().join('_')}`;
-    console.log('Joining room:', room); // Debugging: Log the room being joined
+    console.log('Joining room:', room);
 
     socket.emit('join', {
       sender_id: senderId,
@@ -47,7 +49,7 @@ function Messages() {
     });
 
     socket.on('receive_message', (message) => {
-      console.log('Received message:', message); // Debugging: Log the received message
+      console.log('Received message:', message);
       setMessages((prevMessages) => [...prevMessages, message]); // Add new messages in real-time
     });
 
@@ -56,12 +58,18 @@ function Messages() {
     };
   }, [senderId, receiverId, accessToken]);
 
+  // Scroll to the bottom of the chat when messages change
+  useEffect(() => {
+    if (chatContainerRef.current) {
+      chatContainerRef.current.scrollTop = chatContainerRef.current.scrollHeight;
+    }
+  }, [messages]);
+
   const handleSendMessage = () => {
     if (!newMessage.trim()) return;
 
-    // Standardize the room name by sorting senderId and receiverId alphabetically
     const room = `conversation_${[senderId, receiverId].sort().join('_')}`;
-    console.log('Sending message to room:', room); // Debugging: Log the room being sent to
+    console.log('Sending message to room:', room);
 
     socket.emit('send_message', {
       sender_id: senderId, // Include the sender's user_id
@@ -74,32 +82,56 @@ function Messages() {
   };
 
   return (
-    <div className="container mx-auto px-4 py-6">
-      <h2 className="text-2xl font-bold text-center mb-6">Conversation</h2>
-      <div className="bg-gray-800 shadow-md rounded-lg p-6">
-        <div className="space-y-4">
-          {messages.map((msg, index) => (
+    <div className="flex justify-center items-center h-screen bg-gray-900 text-gray-200">
+      <div className="w-full max-w-2xl flex flex-col h-full bg-gray-800 rounded-lg shadow-lg">
+        {/* Chat Header */}
+        <div className="bg-gray-700 p-4 text-center font-bold text-xl rounded-t-lg">
+          Chat with {messages[0]?.sender_name || 'User'}
+        </div>
+
+        {/* Chat Messages */}
+        <div
+          className="flex-grow overflow-y-auto p-4 space-y-2"
+          ref={chatContainerRef}
+        >
+          {messages.map((msg) => (
             <div
-              key={index}
-              className={`p-3 rounded ${
-                msg.sender_id === senderId ? 'bg-blue-500 text-white' : 'bg-gray-700 text-gray-200'
+              key={msg.id}
+              className={`flex ${
+                msg.sender_id === senderId ? 'justify-end' : 'justify-start'
               }`}
             >
-              {msg.content}
+              <div
+                className={`max-w-xs p-3 rounded-lg shadow-md ${
+                  msg.sender_id === senderId
+                    ? 'bg-blue-500 text-white'
+                    : 'bg-gray-700 text-gray-200'
+                }`}
+              >
+                <p className="font-semibold text-sm">
+                  {msg.sender_id === senderId ? 'You' : msg.sender_name}
+                </p>
+                <p className="text-lg">{msg.content}</p>
+                <p className="text-xs text-gray-400 text-right">
+                  {new Date(msg.created_at).toLocaleTimeString()}
+                </p>
+              </div>
             </div>
           ))}
         </div>
-        <div className="mt-4 flex">
+
+        {/* Message Input */}
+        <div className="bg-gray-700 p-4 flex items-center rounded-b-lg">
           <input
             type="text"
             value={newMessage}
             onChange={(e) => setNewMessage(e.target.value)}
             placeholder="Type a message..."
-            className="flex-grow px-4 py-2 rounded bg-gray-900 text-gray-200"
+            className="flex-grow px-4 py-2 rounded bg-gray-900 text-gray-200 focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
           <button
             onClick={handleSendMessage}
-            className="ml-2 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+            className="ml-4 bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded shadow-md"
           >
             Send
           </button>
