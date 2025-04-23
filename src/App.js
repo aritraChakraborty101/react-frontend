@@ -29,6 +29,9 @@ import Conversations from './components/message/Conversations';
 import ConnectionRequests from './components/ConnectionRequests';
 import ConnectionsList from './components/ConnectionsList';
 import SearchBar from './components/SearchBar';
+import PremiumAccessPage from './components/PremiumAccessPage'; // Import the premium page component
+import SuccessPage from './components/SuccessPage'; // optional
+import CancelPage from './components/CancelPage';   // optional
 
 const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
   const logoutFn = useLogoutFunction();
@@ -119,9 +122,11 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
               <Route path="/connection_requests" element={<ConnectionRequests />} />
               <Route path="/connections" element={<ConnectionsList />} />
               <Route path="/search" element={<SearchBar />} />
+              {/*payment feature routes*/ }
+              <Route path="/premium" element={<PremiumAccessPage />} />
+              <Route path="/success" element={<SuccessPage />} />
+              <Route path="/cancel" element={<CancelPage />} />
             </Routes>
-          
-
           </div>
         </div>
       </div>
