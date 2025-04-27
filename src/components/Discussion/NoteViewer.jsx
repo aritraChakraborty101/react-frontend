@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useAuthInfo } from '@propelauth/react';
-import axios from 'axios';
+import { fetchNote } from '../../api/api'; // Import the API function
 
 function NoteViewer() {
   const { courseId, noteId } = useParams(); // Get the course and note IDs from the URL
@@ -10,21 +10,17 @@ function NoteViewer() {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    const fetchNote = async () => {
+    const getNote = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/notes/${courseId}/${noteId}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setNote(response.data);
+        const data = await fetchNote(accessToken, courseId, noteId); // Use the API function
+        setNote(data);
       } catch (err) {
         console.error('Error fetching note:', err);
         setError('Failed to load the note.');
       }
     };
 
-    fetchNote();
+    getNote();
   }, [courseId, noteId, accessToken]);
 
   if (error) {

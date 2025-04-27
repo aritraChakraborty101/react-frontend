@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useAuthInfo } from '@propelauth/react';
+import { fetchRoleRequests, updateRoleRequest } from '../api/api'; // Import the new API functions
 
 function ManageRoleRequests() {
   const [roleRequests, setRoleRequests] = useState([]);
@@ -9,12 +9,8 @@ function ManageRoleRequests() {
   useEffect(() => {
     const fetchRequests = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/users/role_requests', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // Include the access token in the Authorization header
-          },
-        });
-        setRoleRequests(response.data);
+        const data = await fetchRoleRequests(accessToken); // Use the API function
+        setRoleRequests(data);
       } catch (error) {
         console.error('Error fetching role requests:', error);
       }
@@ -27,16 +23,8 @@ function ManageRoleRequests() {
 
   const handleUpdate = async (requestId, status) => {
     try {
-      const response = await axios.patch(
-        `http://localhost:3001/users/role_requests/${requestId}`,
-        { status },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // Include the access token in the Authorization header
-          },
-        }
-      );
-      alert(response.data.message);
+      const response = await updateRoleRequest(accessToken, requestId, status); // Use the API function
+      alert(response.message);
       setRoleRequests(roleRequests.filter((req) => req.id !== requestId));
     } catch (error) {
       console.error('Error updating role request:', error);

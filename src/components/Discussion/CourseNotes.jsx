@@ -1,7 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { useParams } from "react-router-dom";
 import { useAuthInfo } from "@propelauth/react";
-import axios from "axios";
+import {
+  fetchNotes,
+  fetchComments,
+  addComment,
+  deleteComment,
+  voteNote,
+  deleteNote,
+} from "../../api/api"; // Import API functions
 
 function CourseNotes() {
   const { courseId } = useParams();
@@ -11,26 +18,20 @@ function CourseNotes() {
   const [commentsByNote, setCommentsByNote] = useState({});
   const [newCommentText, setNewCommentText] = useState({});
   const [commentsVisible, setCommentsVisible] = useState({});
-  const [propelauthUserId, setPropelAuthUserId] = useState(null);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchNotes = async () => {
+    const getNotes = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/notes/${courseId}`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setNotes(response.data);
-        // console.log("propelauthUser", notes[0].propel_user_id);
+        const data = await fetchNotes(accessToken, courseId); // Use API function
+        setNotes(data);
       } catch (err) {
         console.error("Error fetching notes:", err);
         setError("Failed to load notes.");
       }
     };
 
-    fetchNotes();
+    getNotes();
   }, [courseId, accessToken]);
 
   const handleFetchComments = async (noteId) => {
@@ -41,10 +42,8 @@ function CourseNotes() {
       }));
 
       if (!commentsVisible[noteId]) {
-        const response = await axios.get(`http://localhost:3001/notes/${noteId}/comments`, {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        });
-        setCommentsByNote((prev) => ({ ...prev, [noteId]: response.data }));
+        const data = await fetchComments(accessToken, noteId); // Use API function
+        setCommentsByNote((prev) => ({ ...prev, [noteId]: data }));
       }
     } catch (err) {
       console.error(`Error fetching comments for note ${noteId}:`, err);
@@ -56,13 +55,7 @@ function CourseNotes() {
     if (!text) return;
 
     try {
-      await axios.post(
-        `http://localhost:3001/notes/${noteId}/comments`,
-        { content: text, user_id: user.userId },
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
+      await addComment(accessToken, noteId, user.userId, text); // Use API function
       setNewCommentText((prev) => ({ ...prev, [noteId]: "" })); // Clear input
       handleFetchComments(noteId); // Refresh comments
     } catch (err) {
@@ -72,9 +65,7 @@ function CourseNotes() {
 
   const handleDeleteComment = async (noteId, commentId) => {
     try {
-      await axios.delete(`http://localhost:3001/notes/${noteId}/comments/${commentId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      await deleteComment(accessToken, noteId, commentId); // Use API function
       handleFetchComments(noteId); // Refresh comments
     } catch (err) {
       console.error(`Error deleting comment ${commentId}:`, err);
@@ -83,17 +74,9 @@ function CourseNotes() {
 
   const handleVote = async (noteId, voteType) => {
     try {
-      await axios.post(
-        `http://localhost:3001/notes/${noteId}/vote`,
-        { vote_type: voteType, user_id: user.userId },
-        {
-          headers: { Authorization: `Bearer ${accessToken}` },
-        }
-      );
-      const response = await axios.get(`http://localhost:3001/notes/${courseId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
-      setNotes(response.data); // Refresh notes
+      await voteNote(accessToken, noteId, user.userId, voteType); // Use API function
+      const data = await fetchNotes(accessToken, courseId); // Refresh notes
+      setNotes(data);
     } catch (err) {
       console.error(`Error voting on note ${noteId}:`, err);
     }
@@ -104,9 +87,7 @@ function CourseNotes() {
     if (!confirmDelete) return;
 
     try {
-      await axios.delete(`http://localhost:3001/notes/${noteId}`, {
-        headers: { Authorization: `Bearer ${accessToken}` },
-      });
+      await deleteNote(accessToken, noteId); // Use API function
       setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId)); // Remove the deleted note from the state
       alert("Note deleted successfully.");
     } catch (err) {

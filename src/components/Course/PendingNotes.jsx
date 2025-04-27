@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
-import axios from "axios";
 import { useAuthInfo } from "@propelauth/react";
+import { fetchPendingNotes, updateNoteStatus } from "../../api/api"; // Import the API functions
 
 function PendingNotes() {
   const { accessToken } = useAuthInfo();
@@ -8,34 +8,22 @@ function PendingNotes() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const fetchPendingNotes = async () => {
+    const getPendingNotes = async () => {
       try {
-        const response = await axios.get("http://localhost:3001/notes/review", {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        });
-        setNotes(response.data);
+        const data = await fetchPendingNotes(accessToken); // Use the API function
+        setNotes(data);
       } catch (err) {
         console.error("Error fetching pending notes:", err);
         setError("Failed to load pending notes.");
       }
     };
 
-    fetchPendingNotes();
+    getPendingNotes();
   }, [accessToken]);
 
   const handleAction = async (noteId, action) => {
     try {
-      await axios.patch(
-        `http://localhost:3001/notes/review/${noteId}`,
-        { status: action },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-        }
-      );
+      await updateNoteStatus(accessToken, noteId, action); // Use the API function
       setNotes((prevNotes) => prevNotes.filter((note) => note.id !== noteId));
     } catch (err) {
       console.error(`Error ${action}ing note ${noteId}:`, err);

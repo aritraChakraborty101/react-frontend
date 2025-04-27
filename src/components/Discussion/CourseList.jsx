@@ -1,30 +1,26 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
-import { useAuthInfo } from '@propelauth/react'; 
+import { useAuthInfo } from '@propelauth/react';
+import { fetchCourses } from '../../api/api'; // Import the API function
 
 function CourseList() {
-  const [courses, setCourses] = useState([]); 
-  const [error, setError] = useState(''); 
-  const { accessToken } = useAuthInfo(); 
+  const [courses, setCourses] = useState([]);
+  const [error, setError] = useState('');
+  const { accessToken } = useAuthInfo();
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchCourses = async () => {
+    const getCourses = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/courses/courses', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, 
-          },
-        });
-        setCourses(response.data); 
+        const data = await fetchCourses(accessToken); // Use the API function
+        setCourses(data);
       } catch (err) {
         console.error('Error fetching courses:', err);
         setError('Failed to load courses.');
       }
     };
 
-    fetchCourses();
+    getCourses();
   }, [accessToken]);
 
   const handleOptionClick = (courseId, option) => {
@@ -52,7 +48,10 @@ function CourseList() {
       <h2 className="text-2xl font-bold text-center mb-6 text-gray-200">Courses</h2>
       <ul className="space-y-4">
         {courses.map((course) => (
-          <li key={course.id} className="bg-gray-800 shadow-md rounded-lg p-4 hover:bg-gray-700 transition">
+          <li
+            key={course.id}
+            className="bg-gray-800 shadow-md rounded-lg p-4 hover:bg-gray-700 transition"
+          >
             <h3 className="text-lg font-semibold text-gray-200">{course.name}</h3>
             <div className="mt-2 space-x-4">
               <button

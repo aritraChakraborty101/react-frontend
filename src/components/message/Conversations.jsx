@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuthInfo } from '@propelauth/react';
+import { fetchConversations } from '../../api/api'; // Import the API function
 
 function Conversations() {
   const [conversations, setConversations] = useState([]);
@@ -9,26 +9,20 @@ function Conversations() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchConversations = async () => {
+    const getConversations = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/messages/conversations', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          params: {
-            user_id: user.userId, // Send user_id as a query parameter
-          },
-        });
-
-        setConversations(response.data.conversations); // Set conversations in state
-        console.log('Conversations:', response.data.conversations);
+        const data = await fetchConversations(accessToken, user.userId); // Use the API function
+        setConversations(data); // Set conversations in state
+        console.log('Conversations:', data);
       } catch (err) {
         console.error('Error fetching conversations:', err);
       }
     };
 
-    fetchConversations();
-  }, [accessToken, user.userId]);
+    if (accessToken && user?.userId) {
+      getConversations();
+    }
+  }, [accessToken, user?.userId]);
 
   return (
     <div className="container mx-auto px-4 py-6">

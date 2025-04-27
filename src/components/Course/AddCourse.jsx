@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useAuthInfo } from '@propelauth/react'; // Import useAuthInfo to get the auth token
+import { addCourse } from '../../api/api'; // Import the API function
 
 function AddCourse() {
   const [courseName, setCourseName] = useState('');
@@ -9,16 +9,8 @@ function AddCourse() {
 
   const handleAddCourse = async () => {
     try {
-      const response = await axios.post(
-        'http://localhost:3001/courses/add_course',
-        { name: courseName },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // Include the auth token
-          },
-        }
-      );
-      setMessage(response.data.message);
+      const response = await addCourse(accessToken, courseName); // Use the API function
+      setMessage(response.message);
       setCourseName(''); // Clear the input field
     } catch (err) {
       console.error('Error adding course:', err);

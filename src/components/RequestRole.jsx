@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import axios from 'axios';
 import { useAuthInfo } from '@propelauth/react'; // Import useAuthInfo to get the access token
+import { requestRole } from '../api/api'; // Import the API function
 
 function RequestRole() {
   const [requestedRole, setRequestedRole] = useState('');
@@ -8,18 +8,8 @@ function RequestRole() {
 
   const handleRequest = async () => {
     try {
-      const response = await axios.post(
-        'http://localhost:3001/users/request_role',
-        {
-          requested_role: requestedRole,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // Include the access token in the Authorization header
-          },
-        }
-      );
-      alert(response.data.message);
+      const response = await requestRole(accessToken, requestedRole); // Use the API function
+      alert(response.message);
     } catch (error) {
       console.error('Error requesting role:', error);
       alert(error.response?.data?.error || 'An error occurred');

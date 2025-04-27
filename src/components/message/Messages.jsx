@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams } from 'react-router-dom';
 import { io } from 'socket.io-client';
 import { useAuthInfo } from '@propelauth/react';
-import axios from 'axios';
+import { fetchMessages } from '../../api/api'; // Import the API function
 
 const socket = io('http://localhost:3001'); // Connect to the backend
 
@@ -15,28 +15,18 @@ function Messages() {
 
   console.log('messages:', messages[0]);
 
-
   // Fetch past messages
   useEffect(() => {
-    const fetchMessages = async () => {
+    const getMessages = async () => {
       try {
-        const response = await axios.get(`http://localhost:3001/messages/conversation`, {
-          headers: {
-            Authorization: `Bearer ${accessToken}`,
-          },
-          params: {
-            sender_id: senderId,
-            receiver_id: receiverId,
-          },
-        });
-
-        setMessages(response.data); // Set the past messages in state
+        const data = await fetchMessages(accessToken, senderId, receiverId); // Use the API function
+        setMessages(data); // Set the past messages in state
       } catch (err) {
         console.error('Error fetching messages:', err);
       }
     };
 
-    fetchMessages();
+    getMessages();
 
     // Standardize the room name by sorting senderId and receiverId alphabetically
     const room = `conversation_${[senderId, receiverId].sort().join('_')}`;

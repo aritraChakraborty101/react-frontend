@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import { loadStripe } from "@stripe/stripe-js";
+import { createCheckoutSession } from "../api/api"; // Import the API function
 
 // Load your publishable key from an environment variable or fallback value.
 const stripePromise = loadStripe(process.env.REACT_APP_STRIPE_PUBLISHABLE_KEY || "pk_test_51RGmYgCYvSjLuAaB2JvAF1DkFG9WhA8fIUbj265FN9Lx6aDsqoFmaPf8CSmtpOVygzSkXP5pNpahaksbz9q4rv6g00PTgdbVuX");
@@ -10,25 +11,17 @@ function PaymentButton() {
   const handleCheckout = async () => {
     setLoading(true);
     try {
-      // 1. Create a Checkout Session on your Flask backend—with authentication.
-      const response = await fetch("http://localhost:3001/payment/create-checkout-session", {
-        method: "POST",
-        headers: { 
-          "Content-Type": "application/json",
-          "Authorization": "Bearer mysecrettoken"  // Ensure this matches your backend expected token
-        },
-        body: JSON.stringify({
-          items: [{ price: "price_123", quantity: 1 }]
-        })
-      });
-      
-      const data = await response.json();
+      // 1. Create a Checkout Session using the API function
+      const data = await createCheckoutSession("mysecrettoken", [
+        { price: "price_123", quantity: 1 },
+      ]);
 
-      // 2. Initialize Stripe.js.
+      // 2. Initialize Stripe.js
       const stripe = await stripePromise;
-      // 3. Redirect to Stripe Checkout using the returned session ID.
+
+      // 3. Redirect to Stripe Checkout using the returned session ID
       const { error } = await stripe.redirectToCheckout({
-        sessionId: data.id   // The backend returns { id: session.id }
+        sessionId: data.id, // The backend returns { id: session.id }
       });
       if (error) {
         console.error("Stripe redirect error:", error.message);

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
 import { useAuthInfo } from '@propelauth/react'; // Import useAuthInfo
+import { fetchReports, resolveReport } from '../api/api'; // Import the API functions
 
 function Reports() {
   const [reports, setReports] = useState([]);
@@ -8,33 +8,23 @@ function Reports() {
   const { accessToken } = useAuthInfo(); // Retrieve the access token
 
   useEffect(() => {
-    const fetchReports = async () => {
+    const fetchAllReports = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/users/reports', {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // Include the access token in the Authorization header
-          },
-        });
-        setReports(response.data);
+        const data = await fetchReports(accessToken); // Use the API function
+        setReports(data);
       } catch (error) {
         console.error('Error fetching reports:', error);
       }
     };
 
-    fetchReports();
+    if (accessToken) {
+      fetchAllReports();
+    }
   }, [accessToken]);
 
   const handleAction = async (reportId, action) => {
     try {
-      await axios.patch(
-        `http://localhost:3001/users/resolve_report/${reportId}`,
-        { action },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // Include the access token in the Authorization header
-          },
-        }
-      );
+      await resolveReport(accessToken, reportId, action); // Use the API function
       setMessage(`Report ${action === 'ban' ? 'resolved (user banned)' : 'rejected'} successfully!`);
       setReports(reports.filter((report) => report.id !== reportId));
     } catch (error) {

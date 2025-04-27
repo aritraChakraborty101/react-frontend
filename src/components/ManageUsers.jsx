@@ -1,26 +1,26 @@
 import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import { fetchUsers, banUser, deleteUser } from '../api/api'; // Import the new API functions
 
 function ManageUsers() {
   const [users, setUsers] = useState([]);
 
   useEffect(() => {
-    const fetchUsers = async () => {
+    const fetchAllUsers = async () => {
       try {
-        const response = await axios.get('http://localhost:3001/users');
-        setUsers(response.data);
+        const data = await fetchUsers(); // Use the API function
+        setUsers(data);
       } catch (error) {
         console.error('Error fetching users:', error);
       }
     };
 
-    fetchUsers();
+    fetchAllUsers();
   }, []);
 
   const handleBan = async (userId) => {
     try {
-      const response = await axios.patch(`http://localhost:3001/users/${userId}/ban`);
-      alert(response.data.message);
+      const response = await banUser(userId); // Use the API function
+      alert(response.message);
       setUsers(users.map((user) => (user.id === userId ? { ...user, is_banned: true } : user)));
     } catch (error) {
       console.error('Error banning user:', error);
@@ -29,8 +29,8 @@ function ManageUsers() {
 
   const handleDelete = async (userId) => {
     try {
-      const response = await axios.delete(`http://localhost:3001/users/${userId}`);
-      alert(response.data.message);
+      const response = await deleteUser(userId); // Use the API function
+      alert(response.message);
       setUsers(users.filter((user) => user.id !== userId));
     } catch (error) {
       console.error('Error deleting user:', error);

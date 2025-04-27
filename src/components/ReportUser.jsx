@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuthInfo } from '@propelauth/react'; // Import useAuthInfo
+import { reportUser } from '../api/api'; // Import the API function
 
 function ReportUser() {
   const { userId } = useParams(); // Reported user's ID
@@ -19,19 +19,7 @@ function ReportUser() {
       return;
     }
     try {
-      await axios.post(
-        'http://localhost:3001/users/report_user',
-        {
-          reported_user_id: userId,
-          reporter_user_id: reporterId,
-          issue,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${accessToken}`, // Use the access token from useAuthInfo
-          },
-        }
-      );
+      await reportUser(accessToken, reporterId, userId, issue); // Use the API function
       setMessage('Report submitted successfully!');
       setTimeout(() => navigate('/'), 2000); // Redirect after 2 seconds
     } catch (error) {

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import { useAuthInfo } from '@propelauth/react';
+import { uploadNote } from '../../api/api'; // Import the API function
 
 function UploadNote() {
   const { courseId } = useParams(); // Get the course ID from the URL
@@ -35,12 +35,7 @@ function UploadNote() {
     formData.append('tags', tags); // Send category tags
 
     try {
-      await axios.post('http://localhost:3001/notes/upload', formData, {
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-          'Content-Type': 'multipart/form-data',
-        },
-      });
+      await uploadNote(accessToken, formData); // Use the API function
       alert('Note uploaded successfully!');
       navigate(`/courses/${courseId}`);
     } catch (err) {
@@ -55,8 +50,8 @@ function UploadNote() {
       {error && <p className="text-red-500 text-center">{error}</p>}
       <form onSubmit={handleSubmit} className="max-w-2xl mx-auto bg-gray-800 p-6 rounded-lg shadow-md">
         <div className="mb-4">
-            <label htmlFor="title" className="block text-gray-200 mb-2">Title</label>
-            <input
+          <label htmlFor="title" className="block text-gray-200 mb-2">Title</label>
+          <input
             id="title"
             type="text"
             value={title}
@@ -64,22 +59,22 @@ function UploadNote() {
             className="w-full px-4 py-2 bg-gray-900 text-gray-200 rounded"
             aria-label="Title of the note"
             required
-            />
+          />
         </div>
         <div className="mb-4">
-            <label htmlFor="content" className="block text-gray-200 mb-2">Description</label>
-            <textarea
+          <label htmlFor="content" className="block text-gray-200 mb-2">Description</label>
+          <textarea
             id="content"
             value={content}
             onChange={(e) => setContent(e.target.value)}
             className="w-full px-4 py-2 bg-gray-900 text-gray-200 rounded"
             aria-label="Description of the note"
             required
-            />
+          />
         </div>
         <div className="mb-4">
-            <label htmlFor="tags" className="block text-gray-200 mb-2">Category Tags (comma-separated)</label>
-            <input
+          <label htmlFor="tags" className="block text-gray-200 mb-2">Category Tags (comma-separated)</label>
+          <input
             id="tags"
             type="text"
             value={tags}
@@ -87,11 +82,11 @@ function UploadNote() {
             className="w-full px-4 py-2 bg-gray-900 text-gray-200 rounded"
             placeholder="e.g., Math, Physics, Chemistry"
             aria-label="Category tags for the note"
-            />
+          />
         </div>
         <div className="mb-4">
-            <label htmlFor="file" className="block text-gray-200 mb-2">Upload PDF</label>
-            <input
+          <label htmlFor="file" className="block text-gray-200 mb-2">Upload PDF</label>
+          <input
             id="file"
             type="file"
             onChange={handleFileChange}
@@ -99,16 +94,16 @@ function UploadNote() {
             className="w-full px-4 py-2 bg-gray-900 text-gray-200 rounded"
             aria-label="Upload PDF file"
             required
-            />
+          />
         </div>
         <button
-            type="submit"
-            className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
-            aria-label="Submit the form to upload the note"
+          type="submit"
+          className="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded"
+          aria-label="Submit the form to upload the note"
         >
-            Upload
+          Upload
         </button>
-        </form>
+      </form>
     </div>
   );
 }
