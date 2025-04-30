@@ -11,6 +11,7 @@ function UserList() {
       try {
         const data = await fetchAllUsers(); // Use the API function
         setUsers(data);
+        console.log('Fetched users:', data);
       } catch (err) {
         console.error('Error fetching users:', err);
         setError('Failed to load users.');
@@ -38,7 +39,7 @@ function UserList() {
             className="bg-gray-800 shadow-md rounded-lg p-4 hover:bg-gray-700 transition"
           >
             <Link
-              to={`/profile/${user.prope_user_id}`}
+              to={`/profile/${user.propel_user_id}`}
               className="text-blue-400 font-semibold hover:underline"
             >
               {user.name}
