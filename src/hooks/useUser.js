@@ -40,11 +40,10 @@ export const useUser = (accessToken) => {
     const fetchUserRole = async () => {
       if (accessToken) {
         try {
-          const response = await axios.get('http://localhost:3001/users/get_role', {
+          const response = await axios.get('https://backend-flask-five.vercel.app/users/get_role', {
             headers: { Authorization: `Bearer ${accessToken}` },
           });
           setRole(response.data.role);
-          console.log('User Role:', response.data.role);
         } catch (error) {
           console.error('Error fetching user role:', error);
         } finally {

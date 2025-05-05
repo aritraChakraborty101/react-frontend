@@ -4,7 +4,7 @@ import { io } from 'socket.io-client';
 import { useAuthInfo } from '@propelauth/react';
 import { fetchMessages } from '../../api/api'; // Import the API function
 
-const socket = io('http://localhost:3001'); // Connect to the backend
+const socket = io('https://backend-flask-five.vercel.app'); // Connect to the backend
 
 function Messages() {
   const { senderId, receiverId } = useParams(); // Extract sender_id and receiver_id from the URL

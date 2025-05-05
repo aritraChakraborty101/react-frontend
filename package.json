@@ -2,7 +2,7 @@
   "name": "react-frontend",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://localhost:3001",
+  "proxy": "https://backend-flask-five.vercel.app",
   "dependencies": {
     "@propelauth/react": "^2.0.29",
     "@stripe/react-stripe-js": "^3.6.0",

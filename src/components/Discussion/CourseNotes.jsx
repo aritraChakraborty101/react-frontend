@@ -13,6 +13,7 @@ import {
 function CourseNotes() {
   const { courseId } = useParams();
   const { accessToken, user } = useAuthInfo();
+  const[userId, setUserId] = useState(user?.userId);
 
   const [notes, setNotes] = useState([]);
   const [commentsByNote, setCommentsByNote] = useState({});
@@ -20,10 +21,15 @@ function CourseNotes() {
   const [commentsVisible, setCommentsVisible] = useState({});
   const [error, setError] = useState("");
 
+  
+  console.log("User ID:", userId);
+  console.log(notes)
+
   useEffect(() => {
     const getNotes = async () => {
       try {
         const data = await fetchNotes(accessToken, courseId); // Use API function
+        setUserId(user?.userId);
         setNotes(data);
       } catch (err) {
         console.error("Error fetching notes:", err);
@@ -165,7 +171,7 @@ function CourseNotes() {
               </div>
 
               {/* Delete Button */}
-              {note.propel_user_id === user?.userId && (
+              {note.user_id === userId && (
                 <div className="flex space-x-2 mt-4">
                   <button
                     onClick={() => handleDeleteNote(note.id)}
