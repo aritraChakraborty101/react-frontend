@@ -9,7 +9,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-});
+}); 
 
 // Sync user with the backend
 export const syncUser = async (userInfo) => {

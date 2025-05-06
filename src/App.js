@@ -32,6 +32,8 @@ import SearchBar from './components/SearchBar';
 import PremiumAccessPage from './components/PremiumAccessPage'; // Import the premium page component
 import SuccessPage from './components/SuccessPage'; // optional
 import CancelPage from './components/CancelPage';   // optional
+import AiHelper from './components/ChatBot/AiHelper'; // Import the AiHelper component
+
 
 const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
   const logoutFn = useLogoutFunction();
@@ -126,6 +128,7 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
               <Route path="/premium" element={<PremiumAccessPage />} />
               <Route path="/success" element={<SuccessPage />} />
               <Route path="/cancel" element={<CancelPage />} />
+              <Route path="/ai-helper" element={<AiHelper />} />
             </Routes>
           </div>
         </div>

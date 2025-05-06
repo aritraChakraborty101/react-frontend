@@ -47,6 +47,12 @@ function Sidebar() {
           <Link to="/conversations" className="block hover:bg-gray-700 px-4 py-2 rounded">
             Chat List
           </Link>
+          
+        </li>
+        <li>
+        <Link to="/ai-helper" className="block hover:bg-gray-700 px-4 py-2 rounded">
+            AI Helper
+          </Link>
         </li>
       </ul>
     </div>
