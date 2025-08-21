@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLogoutFunction, useRedirectFunctions, withAuthInfo } from '@propelauth/react';
-import { HashRouter as Routes, Routes, Route } from 'react-router-dom';
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import UserInfo from './components/UserInfo';
 import ListOfOrgs from './components/ListOfOrgs';
@@ -53,7 +53,9 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
 
   if (isLoggedIn) {
     return (
+      <Router basename='/react-frontend'>
       <div className="flex bg-gray-900 text-gray-200 min-h-screen">
+        
         {/* Sidebar */}
         <Sidebar />
 
@@ -64,7 +66,7 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
 
           {/* Routing Content */}
           <div className="p-4">
-            <Routes basename='/react-frontend'>
+            <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/user_info" element={<UserInfo />} />
               <Route path="/orgs" element={<ListOfOrgs />} />
@@ -134,6 +136,7 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
           </div>
         </div>
       </div>
+      </Router>
     );
   }
 
