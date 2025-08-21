@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLogoutFunction, useRedirectFunctions, withAuthInfo } from '@propelauth/react';
-import { Routes, Route } from 'react-router-dom';
+import { HashRouter as Routes, Routes, Route } from 'react-router-dom';
 import Home from './components/Home';
 import UserInfo from './components/UserInfo';
 import ListOfOrgs from './components/ListOfOrgs';
@@ -39,6 +39,7 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
   const logoutFn = useLogoutFunction();
   const { redirectToSignupPage, redirectToLoginPage } = useRedirectFunctions();
 
+
   // Use a custom hook to load user state and role
   const { userInfo, role, loading } = useUser(accessToken);
 
@@ -63,7 +64,7 @@ const App = withAuthInfo(({ isLoggedIn, accessToken }) => {
 
           {/* Routing Content */}
           <div className="p-4">
-            <Routes>
+            <Routes basename='/react-frontend'>
               <Route path="/" element={<Home />} />
               <Route path="/user_info" element={<UserInfo />} />
               <Route path="/orgs" element={<ListOfOrgs />} />
